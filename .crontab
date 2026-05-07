@@ -1,0 +1,6 @@
+# CRONTAB 自动任务（用户可按需启用）
+# 在终端执行: crontab .crontab
+
+# 每天检查并生成新博客文章
+# 这个脚本使用 Vercel 直接部署，不需要 GitHub
+# 0 5 * * * cd ~/ai-saas && node scripts/generate-post.mjs 2>> ~/ai-saas/logs/cron.log && ~/.npm-global/bin/vercel --prod --token 你的TOKEN --yes 2>> ~/ai-saas/logs/deploy.log

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/api/',
     },
-    sitemap: 'https://你的域名.com/sitemap.xml',
+    sitemap: 'https://ai-saas-bice-ten.vercel.app/sitemap.xml',
   };
 }

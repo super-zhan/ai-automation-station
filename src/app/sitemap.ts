@@ -1,6 +1,6 @@
 import { getAllPosts } from '@/lib/blog';
 
-const baseUrl = process.env.SITE_URL || 'https://你的域名.com';
+const baseUrl = process.env.SITE_URL || 'https://ai-saas-bice-ten.vercel.app';
 
 export default function sitemap() {
   const posts = getAllPosts();

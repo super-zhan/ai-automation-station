@@ -36,6 +36,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# deploy config (contains tokens)
+.deploy-env
+
+# logs
+logs/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

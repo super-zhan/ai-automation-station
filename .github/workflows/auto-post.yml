@@ -1,0 +1,33 @@
+name: Auto Generate Blog Post
+
+on:
+  schedule:
+    # 每 3 天凌晨 3 点生成一篇新文章
+    - cron: '0 3 */3 * *'
+  workflow_dispatch:  # 可以手动触发
+
+jobs:
+  generate-post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          
+      - name: Generate new blog post
+        run: node scripts/generate-post.mjs
+        
+      - name: Commit and push
+        run: |
+          git config user.name "AI Blogger"
+          git config user.email "bot@ai-saas.app"
+          git add -A
+          # 如果有变更才提交
+          if git diff --cached --quiet; then
+            echo "No new posts generated"
+          else
+            git commit -m "Auto: generate new blog post $(date +%Y-%m-%d)"
+            git push
+          fi
