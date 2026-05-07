@@ -10,6 +10,8 @@ export async function POST(request: NextRequest) {
     }
 
     const results: string[] = [];
+    // Dynamic import for pdf-parse (CJS module that doesn't have default ESM export)
+    const pdfParse = (await import('pdf-parse')).default;
 
     for (const file of files) {
       if (!file.name.endsWith('.pdf')) {
@@ -20,28 +22,15 @@ export async function POST(request: NextRequest) {
       const buffer = Buffer.from(await file.arrayBuffer());
 
       try {
-        // Dynamic import for pdf-parse (ESM module)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const pdfParse: any = await import('pdf-parse');
-        const PDFParse = pdfParse.PDFParse || pdfParse.default?.PDFParse;
-        // Set up worker path for Node.js environment
-        PDFParse.setWorker?.();
-
-        const parser = new PDFParse({
-          data: new Uint8Array(buffer),
-          disableFontFace: true,
-        });
-
-        const textResult = await parser.getText();
-        const text = textResult.text || '';
-
-        const cleaned = text
+        const data = await pdfParse(buffer);
+        const cleaned = (data.text || '')
           .replace(/\n{3,}/g, '\n\n')
           .replace(/ {2,}/g, ' ')
           .trim();
 
         results.push([
           `文件名: ${file.name}`,
+          `页数: ${data.numpages || '?'}`,
           `文本长度: ${cleaned.length} 字符`,
           '',
           cleaned.slice(0, 2000),
@@ -60,10 +49,13 @@ export async function POST(request: NextRequest) {
       content: results.join('\n'),
     });
   } catch (error) {
-    console.error('PDF processing error:', error);
+    const msg = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+    console.error('PDF processing error:', msg);
     return NextResponse.json({
       success: false,
       message: '处理文件时出错',
+      error: msg,
+      stack: error instanceof Error ? error.stack?.split('\n').slice(0, 5).join('\n') : undefined,
     });
   }
 }

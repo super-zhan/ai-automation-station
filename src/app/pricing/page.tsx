@@ -1,104 +1,147 @@
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+'use client';
 
-export const metadata = {
-  title: '定价 - AI 自动化工作站',
-  description: '完全免费的 AI 在线工具。基础功能永久免费，高级功能即将上线。',
-};
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Zap, Check, ArrowLeft, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { useTranslation } from '@/lib/i18n';
 
 export default function PricingPage() {
-  const plans = [
-    {
-      name: '免费版',
+  const { t } = useTranslation();
+  const router = useRouter();
+  const [proHover, setProHover] = useState(false);
+
+  const plans = {
+    free: {
+      name: t('pricing.free'),
       price: '0',
-      desc: '适合个人日常使用',
-      features: [
-        'Excel 基础处理（1000行以内）',
-        'PDF 文本提取（10页以内）',
-        '文档格式转换',
-        '每日 20 次处理',
-      ],
-      cta: '开始使用',
-      popular: false,
+      desc: t('pricing.freeDesc'),
+      featureKeys: ['pricing.freeFeatures.0', 'pricing.freeFeatures.1', 'pricing.freeFeatures.2', 'pricing.freeFeatures.3'],
+      href: '/tools',
     },
-    {
-      name: '专业版',
+    pro: {
+      name: t('pricing.pro'),
       price: '29',
-      desc: '适合重度用户和中小企业',
-      features: [
-        'Excel 高级处理（无限制）',
-        'PDF 批量提取（无限制）',
-        'AI 智能分析',
-        '无限次处理',
-        '优先支持',
-      ],
-      cta: '即将上线',
-      popular: true,
+      desc: t('pricing.proDesc'),
+      featureKeys: ['pricing.proFeatures.0', 'pricing.proFeatures.1', 'pricing.proFeatures.2', 'pricing.proFeatures.3', 'pricing.proFeatures.4'],
     },
-    {
-      name: '企业版',
+    enterprise: {
+      name: t('pricing.enterprise'),
       price: '99',
-      desc: '适合团队和企业定制需求',
-      features: [
-        '全部专业版功能',
-        '私有化部署',
-        'API 接口',
-        '定制化开发',
-        '专属客服',
-      ],
-      cta: '联系我们',
-      popular: false,
+      desc: t('pricing.enterpriseDesc'),
+      featureKeys: ['pricing.enterpriseFeatures.0', 'pricing.enterpriseFeatures.1', 'pricing.enterpriseFeatures.2', 'pricing.enterpriseFeatures.3', 'pricing.enterpriseFeatures.4', 'pricing.enterpriseFeatures.5'],
+      href: 'mailto:contact@zidongai.com.cn?subject=企业版咨询',
     },
-  ];
+  };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold mb-3">简单透明的定价</h1>
-        <p className="text-[var(--text-muted)]">所有基础功能永久免费，专业版即将推出</p>
+    <div className="max-w-6xl mx-auto px-4 py-16">
+      {/* Header */}
+      <div className="text-center mb-16">
+        <div className="w-12 h-12 rounded-xl bg-[var(--primary)]/10 flex items-center justify-center mx-auto mb-4">
+          <Zap className="w-6 h-6 text-[var(--primary)]" />
+        </div>
+        <h1 className="text-4xl font-bold mb-3">{t('pricing.title')}</h1>
+        <p className="text-[var(--text-muted)] text-lg max-w-xl mx-auto">
+          {t('pricing.sub')}
+        </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-        {plans.map(plan => (
-          <div
-            key={plan.name}
-            className={`relative p-6 rounded-xl border ${
-              plan.popular
-                ? 'border-[var(--primary)] shadow-lg shadow-[var(--primary)]/10'
-                : 'border-[var(--border)]'
-            } bg-[var(--bg)]`}
-          >
-            {plan.popular && (
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs px-3 py-1 rounded-full bg-[var(--primary)] text-white">
-                推荐
-              </span>
-            )}
-            <h3 className="text-lg font-semibold mb-1">{plan.name}</h3>
-            <div className="mb-4">
-              <span className="text-3xl font-bold">¥{plan.price}</span>
-              <span className="text-sm text-[var(--text-muted)]">/月</span>
-            </div>
-            <p className="text-sm text-[var(--text-muted)] mb-6">{plan.desc}</p>
-            <ul className="space-y-3 mb-8">
-              {plan.features.map(f => (
-                <li key={f} className="text-sm flex items-start gap-2">
-                  <span className="text-[var(--primary)] mt-0.5">✓</span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button
-              disabled={plan.name !== '免费版'}
-              className={`w-full py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                plan.popular
-                  ? 'bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)]'
-                  : 'border border-[var(--border)] hover:bg-[var(--bg-muted)]'
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
-            >
-              {plan.cta}
-            </button>
+      <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-start">
+        {/* Free Plan */}
+        <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--bg)]">
+          <h3 className="text-lg font-semibold mb-1">{plans.free.name}</h3>
+          <div className="mb-4">
+            <span className="text-3xl font-bold">¥0</span>
+            <span className="text-sm text-[var(--text-muted)]">{t('pricing.priceMonth')}</span>
           </div>
-        ))}
+          <p className="text-sm text-[var(--text-muted)] mb-6">{plans.free.desc}</p>
+          <ul className="space-y-3 mb-8">
+            {plans.free.featureKeys.map(k => (
+              <li key={k} className="text-sm flex items-start gap-2">
+                <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                {t(k)}
+              </li>
+            ))}
+          </ul>
+          <Link
+            href={plans.free.href}
+            className="block w-full text-center py-2.5 rounded-lg text-sm font-medium border border-[var(--border)] hover:bg-[var(--bg-muted)] transition-colors"
+          >
+            {t('pricing.startFree')}
+          </Link>
+        </div>
+
+        {/* Pro Plan - Popular */}
+        <div
+          className="relative p-6 rounded-xl border-2 border-[var(--primary)] shadow-xl shadow-[var(--primary)]/10 bg-[var(--bg)] scale-105"
+          onMouseEnter={() => setProHover(true)}
+          onMouseLeave={() => setProHover(false)}
+        >
+          <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs px-4 py-1 rounded-full bg-[var(--primary)] text-white font-medium">
+            {t('pricing.recommended')}
+          </span>
+          <h3 className="text-lg font-semibold mb-1">{plans.pro.name}</h3>
+          <div className="mb-4">
+            <span className="text-3xl font-bold">¥29</span>
+            <span className="text-sm text-[var(--text-muted)]">{t('pricing.priceMonth')}</span>
+            <span className="ml-2 text-xs text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-0.5 rounded-full">
+              {t('pricing.firstMonth')}
+            </span>
+          </div>
+          <p className="text-sm text-[var(--text-muted)] mb-6">{plans.pro.desc}</p>
+          <ul className="space-y-3 mb-8">
+            {plans.pro.featureKeys.map(k => (
+              <li key={k} className="text-sm flex items-start gap-2">
+                <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                {t(k)}
+              </li>
+            ))}
+          </ul>
+          <button
+            onClick={() => router.push('/pricing/checkout?plan=pro')}
+            className={`w-full py-2.5 rounded-lg text-sm font-medium transition-all ${
+              proHover
+                ? 'bg-[var(--primary-dark)] scale-[1.02]'
+                : 'bg-[var(--primary)]'
+            } text-white shadow-lg shadow-[var(--primary)]/20`}
+          >
+            {t('pricing.subscribe')}
+          </button>
+        </div>
+
+        {/* Enterprise Plan */}
+        <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--bg)]">
+          <h3 className="text-lg font-semibold mb-1">{plans.enterprise.name}</h3>
+          <div className="mb-4">
+            <span className="text-3xl font-bold">¥99</span>
+            <span className="text-sm text-[var(--text-muted)]">{t('pricing.priceMonth')}</span>
+          </div>
+          <p className="text-sm text-[var(--text-muted)] mb-6">{plans.enterprise.desc}</p>
+          <ul className="space-y-3 mb-8">
+            {plans.enterprise.featureKeys.map(k => (
+              <li key={k} className="text-sm flex items-start gap-2">
+                <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                {t(k)}
+              </li>
+            ))}
+          </ul>
+          <a
+            href={plans.enterprise.href}
+            className="block w-full text-center py-2.5 rounded-lg text-sm font-medium border border-[var(--border)] hover:bg-[var(--bg-muted)] transition-colors"
+          >
+            {t('pricing.contactUs')}
+          </a>
+        </div>
+      </div>
+
+      {/* Trust badges */}
+      <div className="mt-16 text-center">
+        <div className="flex flex-wrap justify-center gap-8 text-sm text-[var(--text-muted)]">
+          <span>{t('pricing.badge1')}</span>
+          <span>{t('pricing.badge2')}</span>
+          <span>{t('pricing.badge3')}</span>
+        </div>
       </div>
     </div>
   );

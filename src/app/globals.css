@@ -1,79 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --accent: #7c3aed;
   --bg: #ffffff;
-  --bg-muted: #f8fafc;
-  --text: #0f172a;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
+  --bg-muted: #f8f9fa;
+  --text: #1a1a2e;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --card: #ffffff;
 }
 
 .dark {
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --accent: #8b5cf6;
-  --bg: #0f172a;
-  --bg-muted: #1e293b;
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
-  --border: #334155;
+  --bg: #0f0f1a;
+  --bg-muted: #1a1a2e;
+  --text: #f0f0f5;
+  --text-muted: #9ca3af;
+  --border: #2d2d4a;
+  --primary: #818cf8;
+  --primary-dark: #6366f1;
+  --card: #1a1a2e;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: linear-gradient(135deg, var(--primary), #a78bfa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.gradient-bg {
-  background: linear-gradient(135deg, #2563eb10, #7c3aed10);
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-.card-hover {
-  transition: all 0.2s ease;
-}
-.card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.prose {
-  max-width: 65ch;
-  line-height: 1.75;
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
 }
-.prose h1 { font-size: 2rem; font-weight: 700; margin: 1.5rem 0 1rem; }
-.prose h2 { font-size: 1.5rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
-.prose h3 { font-size: 1.25rem; font-weight: 600; margin: 1.25rem 0 0.5rem; }
-.prose p { margin: 0.75rem 0; }
-.prose ul, .prose ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-.prose li { margin: 0.25rem 0; }
-.prose code {
-  background: var(--bg-muted);
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
-  font-size: 0.875rem;
-}
-.prose pre {
-  background: var(--bg-muted);
-  padding: 1rem;
-  border-radius: 8px;
-  overflow-x: auto;
-  border: 1px solid var(--border);
-}
-.prose a { color: var(--primary); text-decoration: underline; }
-.prose img { max-width: 100%; border-radius: 8px; margin: 1.5rem 0; }
-.prose blockquote {
-  border-left: 3px solid var(--primary);
-  padding-left: 1rem;
-  color: var(--text-muted);
-  margin: 1rem 0;
+
+/* Selection */
+::selection {
+  background: var(--primary);
+  color: white;
 }

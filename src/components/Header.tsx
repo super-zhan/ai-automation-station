@@ -1,17 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { Menu, X, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Menu, X, Zap, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useTranslation } from '@/lib/i18n';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const { lang, setLang, t } = useTranslation();
+
+  useEffect(() => setMounted(true), []);
 
   const links = [
-    { href: '/', label: '首页' },
-    { href: '/tools', label: '在线工具' },
-    { href: '/blog', label: '博客' },
-    { href: '/pricing', label: '定价' },
+    { href: '/', label: t('nav.home') },
+    { href: '/tools', label: t('nav.tools') },
+    { href: '/blog', label: t('nav.blog') },
+    { href: '/pricing', label: t('nav.pricing') },
+    { href: '/about', label: t('nav.about') },
   ];
 
   return (
@@ -19,7 +27,7 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-lg">
           <Zap className="w-5 h-5 text-[var(--primary)]" />
-          <span className="gradient-text">AI 自动化工作站</span>
+          <span className="gradient-text">{t('site.name')}</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
@@ -28,14 +36,52 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="p-2 rounded-lg hover:bg-[var(--bg-muted)] transition-colors"
+            aria-label={t('nav.toggleTheme')}
+          >
+            {mounted && theme === 'dark' ? (
+              <Sun className="w-4 h-4" />
+            ) : (
+              <Moon className="w-4 h-4" />
+            )}
+          </button>
+          <button
+            onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+            className="p-2 rounded-lg hover:bg-[var(--bg-muted)] transition-colors text-sm"
+            aria-label={t('nav.switchLang')}
+          >
+            {t('nav.switchLang')}
+          </button>
           <a href="/tools/excel-processor" className="text-sm px-4 py-2 rounded-lg bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)] transition-colors">
-            立即使用
+            {t('nav.useNow')}
           </a>
         </nav>
 
-        <button className="md:hidden p-2" onClick={() => setOpen(!open)}>
-          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="p-2 rounded-lg hover:bg-[var(--bg-muted)] transition-colors"
+            aria-label={t('nav.toggleTheme')}
+          >
+            {mounted && theme === 'dark' ? (
+              <Sun className="w-4 h-4" />
+            ) : (
+              <Moon className="w-4 h-4" />
+            )}
+          </button>
+          <button
+            onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+            className="p-2 rounded-lg hover:bg-[var(--bg-muted)] transition-colors text-sm"
+            aria-label={t('nav.switchLang')}
+          >
+            {t('nav.switchLang')}
+          </button>
+          <button className="p-2" onClick={() => setOpen(!open)}>
+            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {open && (
@@ -48,7 +94,7 @@ export default function Header() {
               </Link>
             ))}
             <a href="/tools/excel-processor" className="text-center text-sm px-4 py-2 rounded-lg bg-[var(--primary)] text-white">
-              立即使用
+              {t('nav.useNow')}
             </a>
           </div>
         </div>
