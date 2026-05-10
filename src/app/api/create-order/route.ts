@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_PLANS } from '@/lib/i18n/api-plans';
 
 const ORDERS_FILE = process.cwd() + '/data/orders.json';
 
@@ -16,6 +17,9 @@ interface Order {
   status: 'pending' | 'paid' | 'expired';
   created_at: string;
   paid_at?: string;
+  is_api_plan?: boolean;
+  api_key?: string;
+  oneapi_user_id?: number;
 }
 
 // Simple ID generator
@@ -110,18 +114,28 @@ async function createXunhupayPayment(order: Order): Promise<{ success: boolean; 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { plan, email, payment_method } = body;
+    const { plan, email, payment_method, is_api_plan } = body;
 
     // Validate
     if (!email || !email.includes('@')) {
       return NextResponse.json({ success: false, message: '请输入有效的邮箱地址' });
     }
 
-    if (plan !== 'pro') {
-      return NextResponse.json({ success: false, message: '仅支持专业版（pro）订阅，当前值: ' + plan });
+    // Determine amount and validate plan
+    let amount: number;
+    if (is_api_plan) {
+      const apiPlan = API_PLANS.find(p => p.id === plan);
+      if (!apiPlan) {
+        return NextResponse.json({ success: false, message: '无效的 API 套餐' });
+      }
+      amount = apiPlan.priceCny; // Chinese Yuan for QR code payment
+    } else {
+      if (plan !== 'pro') {
+        return NextResponse.json({ success: false, message: '仅支持专业版（pro）订阅，当前值: ' + plan });
+      }
+      amount = 29;
     }
 
-    const amount = plan === 'pro' ? 29 : 0;
     const orderId = generateOrderId();
 
     const order: Order = {
@@ -132,6 +146,7 @@ export async function POST(request: NextRequest) {
       payment_method: payment_method || 'alipay',
       status: 'pending',
       created_at: new Date().toISOString(),
+      is_api_plan: !!is_api_plan,
     };
 
     // Save order
