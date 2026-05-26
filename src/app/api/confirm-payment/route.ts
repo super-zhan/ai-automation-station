@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
           api_key: result.apiKey,
           user_id: result.userId,
           tokens: quota,
-          endpoint: 'http://8.210.65.231/v1/chat/completions',
+          endpoint: `${process.env.NEXT_PUBLIC_API_BASE || 'http://8.210.65.231'}/v1/chat/completions`,
         });
       } catch (err: any) {
         console.error('OneAPI user creation failed:', err);

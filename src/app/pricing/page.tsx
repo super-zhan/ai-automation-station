@@ -267,7 +267,7 @@ export default function PricingPage() {
                 <p className="font-medium mb-1">
                   {isEn ? 'API Endpoint' : 'API 接入点'}
                 </p>
-                <p className="font-mono text-xs bg-[var(--bg-muted)] px-2 py-1 rounded inline-block">http://8.210.65.231/v1/chat/completions</p>
+                <p className="font-mono text-xs bg-[var(--bg-muted)] px-2 py-1 rounded inline-block">{process.env.NEXT_PUBLIC_API_BASE || 'http://8.210.65.231'}/v1/chat/completions</p>
                 <p className="text-xs text-[var(--text-muted)] mt-1">
                   {isEn ? 'Fully compatible with OpenAI API format. Use any OpenAI SDK.' : '完全兼容 OpenAI API 格式，支持任意 OpenAI SDK。'}
                 </p>
