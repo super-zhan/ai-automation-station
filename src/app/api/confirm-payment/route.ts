@@ -4,10 +4,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { API_PLANS } from '@/lib/i18n/api-plans';
 
-// OneAPI admin endpoint
-const ONEAPI_BASE = 'http://127.0.0.1:3001';
-const ADMIN_USER = 'root';
-const ADMIN_PASS = 'zidongAI2026!'; // IMPORTANT: keep in sync with actual password
+// OneAPI admin endpoint — configure via .env
+const ONEAPI_BASE = process.env.ONEAPI_BASE || 'http://127.0.0.1:3001';
+const ADMIN_USER = process.env.ONEAPI_ADMIN_USER || 'root';
+const ADMIN_PASS = process.env.ONEAPI_ADMIN_PASS || ''; // MUST be set in production
 
 const ORDERS_FILE = process.cwd() + '/data/orders.json';
 
