@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Zap, Check, ArrowLeft, Loader2, Cpu, Server } from 'lucide-react';
+import { Zap, Check, Loader2, Cpu, Server } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 import { API_PLANS } from '@/lib/i18n/api-plans';
@@ -142,14 +141,10 @@ export default function PricingPage() {
               ))}
             </ul>
             <button
-              onClick={() => router.push('/pricing/checkout?plan=pro')}
-              className={`w-full py-2.5 rounded-lg text-sm font-medium transition-all ${
-                proHover
-                  ? 'bg-[var(--primary-dark)] scale-[1.02]'
-                  : 'bg-[var(--primary)]'
-              } text-white shadow-lg shadow-[var(--primary)]/20`}
+              disabled
+              className="w-full py-2.5 rounded-lg text-sm font-medium bg-[var(--border)] text-[var(--text-muted)] cursor-not-allowed"
             >
-              {t('pricing.subscribe')}
+              {isEn ? 'Coming Soon' : '即将开放'}
             </button>
           </div>
 
@@ -230,14 +225,10 @@ export default function PricingPage() {
 
                 {/* CTA */}
                 <button
-                  onClick={() => router.push(`/pricing/checkout?plan=${plan.id}`)}
-                  className={`w-full py-2 rounded-lg text-xs font-medium transition-all ${
-                    plan.popular
-                      ? 'bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)] shadow-md shadow-[var(--primary)]/20'
-                      : 'border border-[var(--border)] hover:bg-[var(--bg-muted)]'
-                  }`}
+                  disabled
+                  className="w-full py-2 rounded-lg text-xs font-medium bg-[var(--border)] text-[var(--text-muted)] cursor-not-allowed"
                 >
-                  {plan.popular ? (isEn ? 'Buy Now' : '立即购买') : (isEn ? 'Select Plan' : '选择方案')}
+                  {isEn ? 'Coming Soon' : '即将开放'}
                 </button>
               </div>
             ))}
