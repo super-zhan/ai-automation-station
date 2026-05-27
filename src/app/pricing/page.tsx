@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Zap, Check, Loader2, Cpu, Server } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/lib/i18n';
 import { API_PLANS } from '@/lib/i18n/api-plans';
 
